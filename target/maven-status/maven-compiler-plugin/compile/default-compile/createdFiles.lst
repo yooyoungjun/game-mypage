@@ -1,0 +1,12 @@
+game\Mypage.class
+game\MypageRepository.class
+game\Allocated.class
+game\Issued.class
+game\MissionAchieved.class
+game\MypageApplication.class
+game\config\kafka\KafkaProcessor.class
+game\PolicyHandler.class
+game\MypageViewHandler.class
+game\Exchanged.class
+game\AbstractEvent.class
+game\AbstractEvent$1.class

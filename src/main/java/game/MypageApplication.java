@@ -1,7 +1,10 @@
 package game;
+
 import game.config.kafka.KafkaProcessor;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.ApplicationContext;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.openfeign.EnableFeignClients;
@@ -10,6 +13,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @SpringBootApplication
 @EnableBinding(KafkaProcessor.class)
 @EnableFeignClients
+@EntityScan
 public class MypageApplication {
     protected static ApplicationContext applicationContext;
     public static void main(String[] args) {

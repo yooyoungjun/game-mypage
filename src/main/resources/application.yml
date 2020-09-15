@@ -50,10 +50,10 @@ server:
 spring:
   profiles: docker
   datasource:
-    url: jdbc:mariadb://team-mariadb.cuy0kl2qzoel.ap-northeast-2.rds.amazonaws.com:3306/teamb-mariadb?useUnicode=yes&characterEncoding=UTF-8
+    url: jdbc:mariadb://${DB_URL}/teamb-mariadb?useUnicode=yes&characterEncoding=UTF-8
     driver-class-name: org.mariadb.jdbc.Driver
-    username: admin
-    password: skccadmin
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
   jpa:
     generate-ddl: true
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect

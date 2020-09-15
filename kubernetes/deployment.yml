@@ -35,3 +35,26 @@ spec:
             timeoutSeconds: 2
             periodSeconds: 5
             failureThreshold: 5
+          env:
+            - name: DB_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: teamb-config
+                  key: DB_URL
+            - name: DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: teamb-config
+                  key: DB_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: teamb-config
+                  key: DB_PASSWORD
+        volumeMounts:
+          - mountPath: "/mnt/aws"
+            name: volume
+      volumes:
+        - name: volume
+          persistentVolumeClaim:
+            claimName: aws-efs

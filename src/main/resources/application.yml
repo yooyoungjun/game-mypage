@@ -5,7 +5,7 @@ server:
 spring:
   profiles: default
   datasource:
-    url: jdbc:mariadb://team-mariadb.cuy0kl2qzoel.ap-northeast-2.rds.amazonaws.com:3306/teamb-mariadb?useUnicode=yes&characterEncoding=UTF-8
+    url: jdbc:mariadb://admin09-mariadb.cuy0kl2qzoel.ap-northeast-2.rds.amazonaws.com:3306/admin09_game?useUnicode=yes&characterEncoding=UTF-8
     driver-class-name: org.mariadb.jdbc.Driver
     username: admin
     password: skccadmin

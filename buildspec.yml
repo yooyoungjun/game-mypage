@@ -40,77 +40,89 @@ phases:
       - kubectl config set-context default --cluster=k8s --user=admin
       - kubectl config use-context default
       - |
-          cat <<EOF | kubectl apply -f -
-          apiVersion: v1
-          kind: Service
-          metadata:
-            name: $_PROJECT_NAME
-            labels:
-              app: $_PROJECT_NAME
-            namespace: game
-          spec:
-            ports:
-              - port: 8080
-                targetPort: 8080
-            selector:
-              app: $_PROJECT_NAME
-          EOF
+        cat <<EOF | kubectl apply -f -
+        apiVersion: v1
+        kind: Service
+        metadata:
+          name: $_PROJECT_NAME
+          labels:
+            app: $_PROJECT_NAME
+          namespace: game
+        spec:
+          ports:
+            - port: 8080
+              targetPort: 8080
+          selector:
+            app: $_PROJECT_NAME
+        EOF
       - |
-          cat  <<EOF | kubectl apply -f -
-          apiVersion: apps/v1
-          kind: Deployment
-          metadata:
-            name: $_PROJECT_NAME
-            labels:
+        cat  <<EOF | kubectl apply -f -
+        apiVersion: apps/v1
+        kind: Deployment
+        metadata:
+          name: $_PROJECT_NAME
+          labels:
+            app: $_PROJECT_NAME
+          namespace: game
+        spec:
+          replicas: 1
+          selector:
+            matchLabels:
               app: $_PROJECT_NAME
-            namespace: game
-          spec:
-            replicas: 1
-            selector:
-              matchLabels:
+          template:
+            metadata:
+              labels:
                 app: $_PROJECT_NAME
-            template:
-              metadata:
-                labels:
-                  app: $_PROJECT_NAME
-              spec:
-                containers:
-                  - name: $_PROJECT_NAME
-                    image: $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$_REPOSITORY_NAME:$CODEBUILD_RESOLVED_SOURCE_VERSION
-                    ports:
-                      - containerPort: 8080
-                    readinessProbe:
-                      httpGet:
-                        path: /actuator/health
-                        port: 8080
-                      initialDelaySeconds: 150
-                      timeoutSeconds: 2
-                      periodSeconds: 5
-                      failureThreshold: 10
-                    livenessProbe:
-                      exec:
-                        command:
-                        - cat
-                        - /mnt/aws/healthy
-                      initialDelaySeconds: 150
-                      timeoutSeconds: 2
-                      periodSeconds: 5
-                      failureThreshold: 5
-                    resources:
-                      requests:
-                        cpu: 100m
-                        memory: 128Mi
-                      limits:
-                        cpu: 250m
-                        memory: 256Mi
-                    volumeMounts:
-                    - mountPath: "/mnt/aws"
-                      name: volume
-                volumes:
-                  - name: volume
-                    persistentVolumeClaim:
-                      claimName: aws-efs
-          EOF
-cache:
-  paths:
-    - '/root/.m2/**/*'
+            spec:
+              containers:
+              - env:
+                - name: DB_URL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: db-config
+                      key: DB_URL
+                - name: DB_USER
+                  valueFrom:
+                    configMapKeyRef:
+                      name: db-config
+                      key: DB_USER
+                - name : DB_PASSWORD
+                  valueFrom:
+                    configMapKeyRef:
+                      name: db-config
+                      key: DB_PASSWORD
+                - name: $_PROJECT_NAME
+                  image: $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$_REPOSITORY_NAME:$CODEBUILD_RESOLVED_SOURCE_VERSION
+                  ports:
+                    - containerPort: 8080
+                  readinessProbe:
+                    httpGet:
+                      path: /actuator/health
+                      port: 8080
+                    initialDelaySeconds: 150
+                    timeoutSeconds: 2
+                    periodSeconds: 5
+                    failureThreshold: 10
+                  livenessProbe:
+                    httpGet:
+                      path: /actuator/health
+                      port: 8080
+                    initialDelaySeconds: 150
+                    timeoutSeconds: 2
+                    periodSeconds: 5
+                    failureThreshold: 5
+                  resources:
+                    requests:
+                      cpu: 500m
+                    limits:
+                      cpu: 800m
+                  volumeMounts:
+                  - mountPath: "/mnt/aws"
+                    name: volume
+              volumes:
+                - name: volume
+                  persistentVolumeClaim:
+                    claimName: aws-efs
+  cache:
+    paths:
+      - '/root/.m2/**/*'

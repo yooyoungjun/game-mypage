@@ -33,7 +33,7 @@ phases:
   post_build:
     commands:
       - echo Pushing the Docker image...
-      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$_REPOSITORY_NAME:$CODEBUILD_RESOLVED_SOURCE_VERSION
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/_REPOSITORY_NAME:$CODEBUILD_RESOLVED_SOURCE_VERSION
       - echo connect kubectl
       - kubectl config set-cluster k8s --server="$KUBE_URL" --insecure-skip-tls-verify=true
       - kubectl config set-credentials admin --token="$KUBE_TOKEN"
@@ -86,43 +86,44 @@ phases:
                     configMapKeyRef:
                       name: db-config
                       key: DB_USER
-                - name : DB_PASSWORD
+                - name: DB_PASSWORD
                   valueFrom:
                     configMapKeyRef:
                       name: db-config
                       key: DB_PASSWORD
-                - name: $_PROJECT_NAME
-                  image: $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$_REPOSITORY_NAME:$CODEBUILD_RESOLVED_SOURCE_VERSION
-                  ports:
-                    - containerPort: 8080
-                  readinessProbe:
-                    httpGet:
-                      path: /actuator/health
-                      port: 8080
-                    initialDelaySeconds: 150
-                    timeoutSeconds: 2
-                    periodSeconds: 5
-                    failureThreshold: 10
-                  livenessProbe:
-                    httpGet:
-                      path: /actuator/health
-                      port: 8080
-                    initialDelaySeconds: 150
-                    timeoutSeconds: 2
-                    periodSeconds: 5
-                    failureThreshold: 5
-                  resources:
-                    requests:
-                      cpu: 500m
-                    limits:
-                      cpu: 800m
-                  volumeMounts:
-                  - mountPath: "/mnt/aws"
-                    name: volume
+                name: $_PROJECT_NAME
+                image: $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/_REPOSITORY_NAME:$CODEBUILD_RESOLVED_SOURCE_VERSION
+                ports:
+                  - containerPort: 8080
+                readinessProbe:
+                  httpGet:
+                    path: /actuator/health
+                    port: 8080
+                  initialDelaySeconds: 150
+                  timeoutSeconds: 2
+                  periodSeconds: 5
+                  failureThreshold: 10
+                livenessProbe:
+                  httpGet:
+                    path: /actuator/health
+                    port: 8080
+                  initialDelaySeconds: 150
+                  timeoutSeconds: 2
+                  periodSeconds: 5
+                  failureThreshold: 5
+                resources:
+                  requests:
+                    cpu: 500m
+                  limits:
+                    cpu: 800m
+                volumeMounts:
+                - mountPath: "/mnt/aws"
+                  name: volume
               volumes:
                 - name: volume
                   persistentVolumeClaim:
                     claimName: aws-efs
-  cache:
-    paths:
-      - '/root/.m2/**/*'
+        EOF
+cache:
+  paths:
+    - '/root/.m2/**/*'

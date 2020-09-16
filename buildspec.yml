@@ -92,7 +92,7 @@ phases:
                       name: db-config
                       key: DB_PASSWORD
                 name: $_PROJECT_NAME
-                image: $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/_REPOSITORY_NAME:$CODEBUILD_RESOLVED_SOURCE_VERSION
+                image: $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$_REPOSITORY_NAME:$CODEBUILD_RESOLVED_SOURCE_VERSION
                 ports:
                   - containerPort: 8080
                 readinessProbe:

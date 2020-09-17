@@ -119,5 +119,23 @@ public class MypageViewHandler {
             e.printStackTrace();
         }
     }
+    @StreamListener(KafkaProcessor.INPUT)
+    public void whenSentMessage_then_UPDATE_4(@Payload Notification noti) {
+        try {
+            if (noti.isMe()) {
+                // view 객체 조회
+                List<Mypage> mypageList = mypageRepository.findByMessageId(noti.getId());
+                for(Mypage mypage : mypageList){
+                    // view 객체에 이벤트의 eventDirectValue 를 set 함
+                    mypage.setMessageStatus(noti.getStatus());
+                    // view 레파지 토리에 save
+                    mypageRepository.save(mypage);
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
 
 }

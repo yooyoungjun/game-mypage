@@ -20,6 +20,9 @@ public class Mypage {
     private Long rewardId;
     @Column(name="rewardStatus")
     private String rewardStatus;
+    private Long messageId;
+    @Column(name="messageStatus")
+    private String messageStatus;
 
 
     public Long getId() {
@@ -56,6 +59,20 @@ public class Mypage {
 
     public void setRewardStatus(String rewardStatus) {
         this.rewardStatus = rewardStatus;
+    }
+    public Long getMessageId() {
+        return messageId;
+    }
+
+    public void setMessageIdId(Long messageId) {
+        this.messageId = messageId;
+    }
+    public String getMessageStatus() {
+        return messageStatus;
+    }
+
+    public void setMessageStatus(String messageStatus) {
+        this.messageStatus = messageStatus;
     }
 
 }

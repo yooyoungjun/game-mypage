@@ -9,5 +9,7 @@ public interface MypageRepository extends CrudRepository<Mypage, Long> {
 
     List<Mypage> findByMissionId(Long missionId);
     List<Mypage> findByRewardId(Long rewardId);
+    List<Mypage> findByMessageId(Long messageId);
+
 
 }

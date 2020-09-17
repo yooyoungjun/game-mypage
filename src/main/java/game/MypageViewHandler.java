@@ -120,14 +120,14 @@ public class MypageViewHandler {
         }
     }
     @StreamListener(KafkaProcessor.INPUT)
-    public void whenSentMessage_then_UPDATE_4(@Payload Notification noti) {
+    public void whenSentMessage_then_UPDATE_4(@Payload SentMessage sentMessage) {
         try {
-            if (noti.isMe()) {
+            if (sentMessage.isMe()) {
                 // view 객체 조회
-                List<Mypage> mypageList = mypageRepository.findByMessageId(noti.getId());
+                List<Mypage> mypageList = mypageRepository.findByMessageId(sentMessage.getId());
                 for(Mypage mypage : mypageList){
                     // view 객체에 이벤트의 eventDirectValue 를 set 함
-                    mypage.setMessageStatus(noti.getStatus());
+                    mypage.setMessageStatus(sentMessage.getStatus());
                     // view 레파지 토리에 save
                     mypageRepository.save(mypage);
                 }

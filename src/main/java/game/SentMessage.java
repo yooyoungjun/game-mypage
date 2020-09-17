@@ -1,6 +1,6 @@
 package game;
 
-public class Notification extends AbstractEvent {
+public class SentMessage extends AbstractEvent {
 
     private Long id;
     private Long missionId;
